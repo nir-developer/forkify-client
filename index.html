@@ -10,8 +10,11 @@
     />
     <link rel="shortcut icon" href="src/img/favicon.png" type="image/x-icon" />
 
+    <!--TELL PARCEL TO COMPILE THE SASS FILE TO CSS - BY REFERENCING THE SASS FILE main.scss - 
+      SO PARCEL WILL REPLACE THIS LINK TO THE ACTUAL LINK IN THE  FINAL DISTRIBUTION(and also all images)
+    -->
     <link rel="stylesheet" href="src/sass/main.scss" />
-    <script defer src="src/js/controller.js"></script>
+    <script defer src="src/js/controller.js" type="module"></script>
 
     <title>forkify // Search over 1,000,000 recipes</title>
   </head>
@@ -86,6 +89,7 @@
 
       <div class="search-results">
         <ul class="results">
+          <a href="#5ed6604591c37cdc054bcd09">Select</a>
           <!-- 
           <li class="preview">
             <a class="preview__link preview__link--active" href="#23456">
