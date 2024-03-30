@@ -1,5 +1,5 @@
 import {Fraction} from 'fractional';
-console.log(Fraction)
+
 //RELATIVE TO THE current folder 
 import icons from 'url:../../img/icons.svg' //PARCEL 2: FOR ANY ASSET WHICH IS NOT A PROGRAMMING FILE(IMAGES, ICONS, VIDEO,,)
 
@@ -100,7 +100,7 @@ class RecipeView{
           <ul class="recipe__ingredient-list">
             ${recipe.ingredients.map(ing => {
                 let fraction = new Fraction(ing.quantity).toString() 
-                console.log(fraction)
+                //console.log(fraction)
                
                 return `
                     <li class="recipe__ingredient">

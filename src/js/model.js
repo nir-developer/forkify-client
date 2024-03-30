@@ -1,5 +1,6 @@
-//HIS API!
-const API_BASE_URL = `https://forkify-api.herokuapp.com/api/v2/recipes/`
+import { getJSON } from "./helpers.js";
+
+import { API_URL } from "./config";
 
 //MY API!! OK - JUST ADD IMAGES TO MY API
 //const API_BASE_URL= `http://localhost:3000/forkify/api/v1/recipes/`
@@ -12,17 +13,15 @@ export const state = {
 }
 
 
-export async function loadRecipe(id)
+export const loadRecipe = async (id)=>
 {
     try 
     {
-        const res = await fetch(`${API_BASE_URL}${id}`); 
-        const data =await res.json(); 
-
-        if(!res.ok) throw new Error(`${data.message} (${res.status})`)
-
+        //IF getJSON throws - then all code after this call will skip to catch below!
+        const data = await getJSON( `${API_URL}/${id}`)
+        
+        //console.log(`Model: received resolved promise - data: `, data)
         let {recipe} = data.data;
-        console.log(recipe)
 
         recipe = {
             //MY API WITH _id 
@@ -37,7 +36,7 @@ export async function loadRecipe(id)
             ingredients:recipe.ingredients
         }
 
-        console.log(recipe)
+        //console.log(recipe)
 
         state.recipe = recipe; 
 
@@ -46,7 +45,7 @@ export async function loadRecipe(id)
     catch(err)
     {
         alert(err)
-        //throw err; 
+        console.error(`*Model: ERROR*: $${err}`)
 
     }
     
