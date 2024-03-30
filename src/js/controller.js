@@ -46,9 +46,18 @@ const recipeController = async() =>{
 }
 
 
+//SUBSCRIBE THIS CONTROLLER SUBSCRIBER TO THE recipeView PUBLISHER 
+function init()
+{
+  recipeView.addHandlerRender(recipeController)
 
-//LISTEN TO THE LOAD  AND HASHCHANGE EVENTS
-['hashchange', 'load'].forEach(e => window.addEventListener(e, recipeController))
+}
+
+init();
+
+
+//LISTEN TO THE LOAD  AND HASHCHANGE EVENTS - REFACTORED THISLOGIC TO THE VIEW!
+//['hashchange', 'load'].forEach(e => window.addEventListener(e, recipeController))
 // window.addEventListener('hashchange', recipeController);
 // window.addEventListener('load', recipeController)
 

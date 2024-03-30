@@ -35,6 +35,14 @@ class RecipeView{
 
 }
 
+  //THIS PUBLISHER VIEW DOES NOT KNOW HOW TO REACT TO EVENT 
+  //DOES NOT HOW WHO IS THE ACTUAL HANDLER FUNCTION
+  //THE PUBLISHER HAS NO CONTROL
+    addHandlerRender(handler) {
+    ['hashchange', 'load'].forEach(ev => window.addEventListener(ev, handler))
+
+  }
+
 
     //PRIVATE METHODS
     #clear()
