@@ -6,6 +6,11 @@ import icons from 'url:../../img/icons.svg' //PARCEL 2: FOR ANY ASSET WHICH IS N
 class RecipeView{
     #data; 
     #parentElement = document.querySelector('.recipe')
+    //MESSAGE DECLERATION IS UI LOGIC - NOT THE LOGIC OF THE CONTROLLER
+    //THE VIEW  SHOULD KNOW THE MESSAGE IT WANTS TO DISPLAY!
+    #errorMessage = 'We could not find your recipe. Please try another one!'
+    #message = ``
+    //<h2>RECIPE VIEW</h2>
 
 
     //PUBLIC API 
@@ -27,10 +32,8 @@ class RecipeView{
           </svg>
         </div> ` 
 
-        //EMPTY THE PARENT CONTAINER 
-        this.#parentElement.innerHTML = ''
-       
-        //RENDER THE SPINNER 
+        //REMOVE OLD MARKUP FROM  THE PARENT CONTAINER AND RENDER THE NEW MARKUP
+        this.#clear();
         this.#parentElement.insertAdjacentHTML('afterbegin', markup) 
 
 }
@@ -43,7 +46,48 @@ class RecipeView{
 
   }
 
+  //REAL WORLD ERROR HANDLING(by render errors on UI - should be here in the view!)
+  //KEEP THE ABILITY OF PASSING THE MESSAGE FROM THE CONTROLLER AND ALSO USE THE #errorMessage as the default message
+  renderError(message = this.#errorMessage)
+  {
+    this.#clear(); 
+    const markup = `
+          <div class="error">
+            <div>
+            
+              <svg>
+                <use href="${icons}#icon-alert-triangle"></use>
+              </svg>
+            </div>
+            <p>${message}</p>
+          </div>
+    `
 
+  this.#parentElement.insertAdjacentHTML('afterbegin', markup)
+
+  }
+
+  renderMessage(message = this.#message){
+
+    const markup = `
+     <div class="message">
+              <div>
+              <h2>RECIPE VIEW</h2>
+                <svg>
+                  <use href="${icons}#icon-smile"></use>
+                      </svg>
+                    </div>
+                    <p>
+                      ${message}
+                    </p>
+                  </div>
+                  `
+
+              this.#clear(); 
+              this.#parentElement.insertAdjacentHTML('afterbegin', markup)
+
+
+  }
     //PRIVATE METHODS
     #clear()
     {

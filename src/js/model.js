@@ -44,8 +44,11 @@ export const loadRecipe = async (id)=>
     }
     catch(err)
     {
-        alert(err)
-        console.error(`*Model: ERROR*: $${err}`)
+        //WRONG PLACE OF HANDLING "REAL WORLD ERROR HANDLING" BY RENDERING ON THE UI
+        //ERROR HANDLING SHOULD BE MOVE BE IN THE VIEW LOGIC!
+        // alert(err)
+         console.error(`*Model: ERROR*: $${err}`)
+        throw err
 
     }
     

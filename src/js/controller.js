@@ -41,7 +41,13 @@ const recipeController = async() =>{
     catch(err)
     {
 
-        console.error(err.message)
+       //delegate Error Handling(real world handling - by render) to view 
+       //BETTER TO LET THE VIEW DEFINE THE MESSAGE IT WANTS TO DISPLAY - dont pass the message 
+              recipeView.renderError()
+      //  recipeView.renderError('HEY FROM CONTROLLER')
+       //recipeView.renderError(`${err} * * * *`)
+      // //recipeView.renderError(err.message)
+        // console.error(err.message)
     }
 }
 
