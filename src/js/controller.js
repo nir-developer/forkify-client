@@ -4,6 +4,7 @@
 import * as model from './model.js'
 import recipeView from './views/recipeView.js'
 import searchView from './views/searchView.js'
+import resultsView from './views/resultsView.js'
 
 
 
@@ -12,7 +13,9 @@ import 'regenerator-runtime/runtime'
 import 'core-js/stable'; 
 
 
-const recipeContainer = document.querySelector('.recipe')
+///PARCEL HOT RELOAD REPLACEMENT 
+if(module.hot) module.hot.accept()
+
 
 const controlRecipes = async() =>{
    
@@ -25,12 +28,15 @@ const controlRecipes = async() =>{
        if(!id) return ;
 
         //1)LOAD SPINNER - UI LOGIC - IMPLEMENTED IN THE VIEW
-       recipeView.renderSpinner();
+        recipeView.renderSpinner();
     
      
         //2) LOAD RECIPE(HTTP LIBRARY COMPONENT - IMPLEMENTED IN THE MODEL)
         await model.loadRecipe(id)
-       const {recipe} = model.state;
+
+        console.log('controller - the RECIPE:')
+        console.log(model.state.recipe)
+       
    
         //3) RENDER RECIPE
         recipeView.render(model.state.recipe)
@@ -39,6 +45,7 @@ const controlRecipes = async() =>{
     catch(err)
     {
 
+      console.log(err)
        //delegate Error Handling(real world handling - by render) to view 
        //BETTER TO LET THE VIEW DEFINE THE MESSAGE IT WANTS TO DISPLAY(instead of passing it the message from the controller)
         recipeView.renderError()
@@ -50,19 +57,18 @@ const controlSearchResults = async (query) =>{
 
   try 
   {
-    //0.Get the search input from the SearchView 
+    //0) Render the spinner 
+    resultsView.renderSpinner()
+    //1)Get the search input from the SearchView 
     const query = searchView.getQuery()
     if(!query) return ; 
 
-
-    
-    //1.LOAD THE RECIPES USING THE MODEL (the model does not return anything- it should only manipulate the state)
+    //2)LOAD THE RECIPES USING THE MODEL (the model does not return anything- it should only manipulate the state)
     await model.loadSearchResults(query)
 
-    //2.GET THE RECIPES FROM THE MODEL STATE
-    const searchResults = model.state.search.results; 
-    console.log('CONTROLLER.controlSearchResults - search results from the model state:')
-    console.log(searchResults)
+    
+    //3)GET THE RESULTS FROM THE MODEL STATE AND RENDER THEM 
+    resultsView.render(model.state.search.results)
 
   
   }

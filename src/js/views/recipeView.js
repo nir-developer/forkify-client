@@ -1,42 +1,19 @@
+import View from './View';
 import {Fraction} from 'fractional';
 
-//RELATIVE TO THE current folder 
+//MUST BOTH IMPORT IT HERE AND IN THE VIEW BASE CLASS!!!!
 import icons from 'url:../../img/icons.svg' //PARCEL 2: FOR ANY ASSET WHICH IS NOT A PROGRAMMING FILE(IMAGES, ICONS, VIDEO,,)
 
-class RecipeView{
-    #data; 
-    #parentElement = document.querySelector('.recipe')
-    //MESSAGE DECLERATION IS UI LOGIC - NOT THE LOGIC OF THE CONTROLLER
-    //THE VIEW  SHOULD KNOW THE MESSAGE IT WANTS TO DISPLAY!
-    #errorMessage = 'We could not find your recipe. Please try another one!'
-    #message = ``
-    //<h2>RECIPE VIEW</h2>
 
+class RecipeView extends View{
+    
+  //MOVED TO BASE CLASS
+    //#data; 
 
-    //PUBLIC API 
-    render(data) 
-    {
-        this.#data = data; 
-        const markup = this.#generateMarkup();
-        this.#clear();
-        this.#parentElement.insertAdjacentHTML('afterbegin', markup)
-    }
+    _parentElement = document.querySelector('.recipe')
+    _errorMessage = 'We could not find your recipe. Please try another one!'
+    _message = ``
 
-
-    renderSpinner (parentEl)
-    {
-      const markup = `
-        <div class="spinner">
-          <svg>
-            <use href="${icons}#icon-loader"></use>
-          </svg>
-        </div> ` 
-
-        //REMOVE OLD MARKUP FROM  THE PARENT CONTAINER AND RENDER THE NEW MARKUP
-        this.#clear();
-        this.#parentElement.insertAdjacentHTML('afterbegin', markup) 
-
-}
 
   //THIS PUBLISHER VIEW DOES NOT KNOW HOW TO REACT TO EVENT 
   //DOES NOT HOW WHO IS THE ACTUAL HANDLER FUNCTION
@@ -46,57 +23,15 @@ class RecipeView{
 
   }
 
-  //REAL WORLD ERROR HANDLING(by render errors on UI - should be here in the view!)
-  //KEEP THE ABILITY OF PASSING THE MESSAGE FROM THE CONTROLLER AND ALSO USE THE #errorMessage as the default message
-  renderError(message = this.#errorMessage)
-  {
-    this.#clear(); 
-    const markup = `
-          <div class="error">
-            <div>
-            
-              <svg>
-                <use href="${icons}#icon-alert-triangle"></use>
-              </svg>
-            </div>
-            <p>${message}</p>
-          </div>
-    `
-
-  this.#parentElement.insertAdjacentHTML('afterbegin', markup)
-
-  }
-
-  renderMessage(message = this.#message){
-
-    const markup = `
-     <div class="message">
-              <div>
-              <h2>RECIPE VIEW</h2>
-                <svg>
-                  <use href="${icons}#icon-smile"></use>
-                      </svg>
-                    </div>
-                    <p>
-                      ${message}
-                    </p>
-                  </div>
-                  `
-
-              this.#clear(); 
-              this.#parentElement.insertAdjacentHTML('afterbegin', markup)
-
-
-  }
-    //PRIVATE METHODS
-    #clear()
+  /**
+   * NOTE - FOR NOW REMOVE THE USER ICON : 
+   *       <svg>
+              <use href="${icons}#icon-user"></use>
+            </svg>
+   */
+    _generateMarkup()
     {
-         //CLEAR THE CURRENT DEFAULT MESSAGE 
-        this.#parentElement.innerHTML = ''
-    }
-    #generateMarkup()
-    {
-        const recipe = this.#data;
+        const recipe = this._data;
         
        return  `
         <figure class="recipe__fig">
@@ -136,9 +71,7 @@ class RecipeView{
           </div>
 
           <div class="recipe__user-generated">
-            <svg>
-              <use href="${icons}#icon-user"></use>
-            </svg>
+            
           </div>
           <button class="btn--round">
             <svg class="">
@@ -199,8 +132,5 @@ class RecipeView{
  export default new RecipeView(); 
 
 
-
-//  const fraction1 = new Fraction(1,2); 
-//  console.log(fraction1.toString());
 
 
