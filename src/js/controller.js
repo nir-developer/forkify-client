@@ -3,8 +3,9 @@
 
 import * as model from './model.js'
 import recipeView from './views/recipeView.js'
+import searchView from './views/searchView.js'
 
-import icons from 'url:../img/icons.svg' //PARCEL 2: FOR ANY ASSET WHICH IS NOT A PROGRAMMING FILE(IMAGES, ICONS, VIDEO,,)
+
 
 //POLYFILLING ASYNC AWAIT + ANY THING ELSE - FOR OLD BROWSERS
 import 'regenerator-runtime/runtime' 
@@ -13,10 +14,7 @@ import 'core-js/stable';
 
 const recipeContainer = document.querySelector('.recipe')
 
-
-
-
-const recipeController = async() =>{
+const controlRecipes = async() =>{
    
   try    
     {
@@ -42,24 +40,55 @@ const recipeController = async() =>{
     {
 
        //delegate Error Handling(real world handling - by render) to view 
-       //BETTER TO LET THE VIEW DEFINE THE MESSAGE IT WANTS TO DISPLAY - dont pass the message 
-              recipeView.renderError()
-      //  recipeView.renderError('HEY FROM CONTROLLER')
-       //recipeView.renderError(`${err} * * * *`)
-      // //recipeView.renderError(err.message)
-        // console.error(err.message)
+       //BETTER TO LET THE VIEW DEFINE THE MESSAGE IT WANTS TO DISPLAY(instead of passing it the message from the controller)
+        recipeView.renderError()
+      
     }
 }
 
+const controlSearchResults = async (query) =>{
 
-//SUBSCRIBE THIS CONTROLLER SUBSCRIBER TO THE recipeView PUBLISHER 
+  try 
+  {
+    //0.Get the search input from the SearchView 
+    const query = searchView.getQuery()
+    if(!query) return ; 
+
+
+    
+    //1.LOAD THE RECIPES USING THE MODEL (the model does not return anything- it should only manipulate the state)
+    await model.loadSearchResults(query)
+
+    //2.GET THE RECIPES FROM THE MODEL STATE
+    const searchResults = model.state.search.results; 
+    console.log('CONTROLLER.controlSearchResults - search results from the model state:')
+    console.log(searchResults)
+
+  
+  }
+  
+catch(err)
+{
+  console.log('controller controlSearchResults catched errror')
+  console.log(err)
+  throw err;
+
+}
+}
+
+
 function init()
 {
-  recipeView.addHandlerRender(recipeController)
+  //SUBSCRIBE controlRecipes ON LOAD/HASHCHANGE EVENTS(ON PAGE LOAD - app start!)
+  recipeView.addHandlerRender(controlRecipes)
+    //SUBSCRIBE controlSearchResults ON THE SEARCH FORM SUBMIT(NOT ON PAGE LOAD - NOT ON APP START)
+  searchView.addHandlerSearch(controlSearchResults)
+  //searchView.addHandlerRender(controlSearchResults)
 
 }
 
 init();
+
 
 
 //LISTEN TO THE LOAD  AND HASHCHANGE EVENTS - REFACTORED THISLOGIC TO THE VIEW!
@@ -81,3 +110,4 @@ init();
 
 // })
 // .catch(err => console.log(err.name))
+

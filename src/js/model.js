@@ -2,14 +2,15 @@ import { getJSON } from "./helpers.js";
 
 import { API_URL } from "./config";
 
-//MY API!! OK - JUST ADD IMAGES TO MY API
-//const API_BASE_URL= `http://localhost:3000/forkify/api/v1/recipes/`
-//66051297c508547d3ca89c91
 
 export const state = {
-    recipe:{
-
+    recipe:{}, 
+    search:{
+        query:'',
+        results:[]
     }
+
+
 }
 
 
@@ -17,12 +18,13 @@ export const loadRecipe = async (id)=>
 {
     try 
     {
+        //1) LOAD THE RECIPE FROM THE API
         //IF getJSON throws - then all code after this call will skip to catch below!
-        const data = await getJSON( `${API_URL}/${id}`)
+        const data = await getJSON( `${API_URL}${id}`)
         
-        //console.log(`Model: received resolved promise - data: `, data)
-        let {recipe} = data.data;
 
+        //2) RENAME API's NAME PROPERTIES
+        let {recipe} = data.data;
         recipe = {
             //MY API WITH _id 
             //id:recipe._id,
@@ -36,12 +38,11 @@ export const loadRecipe = async (id)=>
             ingredients:recipe.ingredients
         }
 
-        //console.log(recipe)
-
+        //3)UPDATE THE STATE
         state.recipe = recipe; 
-
-
     }
+
+
     catch(err)
     {
         //WRONG PLACE OF HANDLING "REAL WORLD ERROR HANDLING" BY RENDERING ON THE UI
@@ -52,6 +53,45 @@ export const loadRecipe = async (id)=>
 
     }
     
-
-
 }
+
+
+export const loadSearchResults = async query =>{
+
+    try 
+    {
+        //0.UPDATE THE STATE: set the query 
+        state.search.query = query; 
+        
+        //1.FETCH THE RESULTS FROM API: OK
+       const data = await getJSON(`${API_URL}?search=${query}`) 
+      
+
+       //2.RENAME API's PROPERTIES NAMES 
+        const recipes =data.data.recipes.map(rec =>{
+            return {
+                publisher:rec.publisher, 
+                image:rec.image_url,
+                title:rec.title, 
+                id:rec.id
+            }
+        })
+
+
+       //3.STORE THE RESULTS IN THE STATE 
+       state.search.results = recipes
+    
+    //    console.log('STATE AFTER SEARCH RESULTS')
+    //    console.log(state)
+       
+    }
+    catch(err)
+    {
+        console.error(`Model: getSearchResults - catch an error:`, err.message)
+        //RETHROW!
+        throw err; 
+    }
+    
+}
+
+// loadSearchResults('Pizza')
