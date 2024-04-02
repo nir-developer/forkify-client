@@ -14,7 +14,7 @@ import 'core-js/stable';
 
 
 ///PARCEL HOT RELOAD REPLACEMENT 
-if(module.hot) module.hot.accept()
+// if(module.hot) module.hot.accept()
 
 
 const controlRecipes = async() =>{
@@ -68,9 +68,17 @@ const controlSearchResults = async (query) =>{
 
     
     //3)GET THE RESULTS FROM THE MODEL STATE AND RENDER THEM 
-    resultsView.render(model.state.search.results)
+    //BEFORE PAGINATION
+    //resultsView.render(model.state.search.results)
 
-  
+   //WITH PAGINATION
+    const res = model.getSearchResultsPage(1)
+    //console.log(res)
+
+    resultsView.render(res)
+
+
+    
   }
   
 catch(err)
