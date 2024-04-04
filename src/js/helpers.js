@@ -4,7 +4,8 @@ const timeout = function(s)
 {
     return new Promise(function(_, reject) {
         setTimeout(function(){
-            console.log('INSIDE TIMEOUT')
+            //NOTE!!! THIS IS A SIDE EFFECT! I SHOULD NOT PRINT - SINCE IT WILL ALWAYS PRINT REGARDLESS!!
+            //console.log('INSIDE TIMEOUT')
              reject(new Error(`Request took too long! Timeout after ${s} seconds!`))
         }, s * 1000)
     });

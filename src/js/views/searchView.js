@@ -15,6 +15,7 @@ addHandlerSearch(handler)
 
     })
 }
+
 getQuery()
 {
 

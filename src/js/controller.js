@@ -5,8 +5,8 @@ import * as model from './model.js'
 import recipeView from './views/recipeView.js'
 import searchView from './views/searchView.js'
 import resultsView from './views/resultsView.js'
-
-
+import paginationView from './views/paginationView.js'
+ 
 
 //POLYFILLING ASYNC AWAIT + ANY THING ELSE - FOR OLD BROWSERS
 import 'regenerator-runtime/runtime' 
@@ -14,7 +14,7 @@ import 'core-js/stable';
 
 
 ///PARCEL HOT RELOAD REPLACEMENT 
-// if(module.hot) module.hot.accept()
+if(module.hot) module.hot.accept()
 
 
 const controlRecipes = async() =>{
@@ -34,12 +34,12 @@ const controlRecipes = async() =>{
         //2) LOAD RECIPE(HTTP LIBRARY COMPONENT - IMPLEMENTED IN THE MODEL)
         await model.loadRecipe(id)
 
-        console.log('controller - the RECIPE:')
-        console.log(model.state.recipe)
-       
+      
    
         //3) RENDER RECIPE
         recipeView.render(model.state.recipe)
+
+
       
   }
     catch(err)
@@ -67,20 +67,18 @@ const controlSearchResults = async (query) =>{
     await model.loadSearchResults(query)
 
     
-    //3)GET THE RESULTS FROM THE MODEL STATE AND RENDER THEM 
-    //BEFORE PAGINATION
+    //3)GET ALL THE RESULTS FROM THE MODEL STATE AND RENDER (BEFORE ADDING THE PAGINATION)
     //resultsView.render(model.state.search.results)
 
-   //WITH PAGINATION
-    const res = model.getSearchResultsPage(1)
-    //console.log(res)
+   //WITH PAGINATION(I set default value for the page to 1 -> if not pass the arg below)
+     resultsView.render(model.getSearchResultsPage(3)) 
 
-    resultsView.render(res)
+    //4)Render the pagination view by passing it's data as the entire search state(since it needs the results, page, and resultsPerPage
+     paginationView.render(model.state.search);  
 
-
-    
   }
-  
+
+ 
 catch(err)
 {
   console.log('controller controlSearchResults catched errror')
@@ -91,13 +89,37 @@ catch(err)
 }
 
 
+//NOTE: the goToPage value is passed BY THE VIEW - WHICH IS STORED ON THE HTML - DATASET!!!
+function controlPagination(goToPage)
+{
+
+
+  //RENDER NEW RESULTS 
+  //1)Update the state of the page 
+  //2)Fetch the requested page 
+  //3)Get the updated state of the search and render the SearchResultsView and the PaginationView with new results and buttons respectively 
+  //4)Render the NEW RESULTS search results and the updated pagination buttons
+  //NOTE - NO LOADING! THE MODEL HAS ALL THE RESULTS OF THE SEARCH IN IT'S STATE!
+  resultsView.render(model.getSearchResultsPage(goToPage))
+
+  //RENDER NEW PAGIANTION BUTTONS
+  paginationView.render(model.state.search)
+
+
+
+}
+
+
 function init()
 {
   //SUBSCRIBE controlRecipes ON LOAD/HASHCHANGE EVENTS(ON PAGE LOAD - app start!)
   recipeView.addHandlerRender(controlRecipes)
-    //SUBSCRIBE controlSearchResults ON THE SEARCH FORM SUBMIT(NOT ON PAGE LOAD - NOT ON APP START)
+  //searchView view(in the static header - does not render anything!) 
+
   searchView.addHandlerSearch(controlSearchResults)
-  //searchView.addHandlerRender(controlSearchResults)
+
+  paginationView.addHandlerClick(controlPagination)
+  
 
 }
 

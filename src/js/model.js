@@ -108,6 +108,3 @@ export  const getSearchResultsPage = function(page = state.search.page)
     return state.search.results.slice(start, end)
 
 }
-
-const x = getSearchResultsPage(1)
-console.log(x)
